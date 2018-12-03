@@ -10,12 +10,12 @@ import (
 func NewOssClient(configInter interface{}) (*oss.Client, error) {
 
 	var (
-		endpoint, ak ,aks string
+		endpoint, ak, aks string
+		conf              *config.Config
+		err               error
 	)
 
-	conf, err := config.ConvertConfig(configInter)
-
-	if err != nil {
+	if conf, err = config.ConvertConfig(configInter); err != nil {
 		return nil, err
 	}
 
@@ -25,9 +25,9 @@ func NewOssClient(configInter interface{}) (*oss.Client, error) {
 		endpoint = conf.GlobalFlag.Endpoint
 	}
 
-	ak  = conf.Global.AccessKey
+	ak = conf.Global.AccessKey
 
-	if len(conf.Oss.AccessKey) >0 {
+	if len(conf.Oss.AccessKey) > 0 {
 		ak = conf.Oss.AccessKey
 	}
 
@@ -43,6 +43,10 @@ func NewOssClient(configInter interface{}) (*oss.Client, error) {
 
 	if len(conf.GlobalFlag.AccessKeySecret) > 0 {
 		aks = conf.GlobalFlag.AccessKeySecret
+	}
+
+	if err = config.LengthCheck(endpoint, ak, aks); err != nil {
+		return nil, err
 	}
 
 	return oss.New(endpoint, ak, aks)
@@ -63,7 +67,7 @@ func (listener *ossProgressListener) ProgressChanged(event *oss.ProgressEvent) {
 			color.New(color.FgGreen).SprintfFunc()("%d", event.ConsumedBytes),
 			color.New(color.FgGreen).SprintfFunc()("%d", event.TotalBytes),
 			event.ConsumedBytes*100/event.TotalBytes,
-			)
+		)
 	case oss.TransferCompletedEvent:
 		fmt.Printf("\nTransfer Completed, ConsumedBytes: %d, TotalBytes %d.\n",
 			event.ConsumedBytes, event.TotalBytes)

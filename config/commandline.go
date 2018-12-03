@@ -49,19 +49,17 @@ func InitConfig(c *cli.Context) error {
 		config.GlobalFlag.ConfigFile = DefaultFile()
 	}
 
-	err := config.Parse()
-
 	// parse config from file to config struct
-	if err != nil {
+	if err := config.Parse(); err != nil {
 		fmt.Println(color.New(color.FgRed).SprintfFunc()("Parsing config file failed, %s", err))
 	}
 
 	/*
-	// TODO init log
-	if config.debug {
-		...
-	}
-	 */
+		// TODO init log
+		if config.debug {
+			...
+		}
+	*/
 
 	//
 	c.App.Metadata["config"] = config
@@ -75,4 +73,14 @@ func ConvertConfig(config interface{}) (*Config, error) {
 	}
 
 	return nil, errors.New("convert config from interface{} to *config{} failed")
+}
+
+func LengthCheck(params ...string) error {
+	for _, param := range params {
+		if param == "" {
+			return errors.New("parameter is empty string")
+		}
+	}
+
+	return nil
 }
