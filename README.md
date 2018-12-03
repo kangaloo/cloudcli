@@ -9,7 +9,7 @@ NAME:
    cloudcli - Aliyun API command line tool
 
 USAGE:
-   cloudcli \[global options\] command \[command options] \[arguments...]
+   cloudcli [global options] command [command options] [arguments...]
 
 VERSION:
    1.0.0
@@ -30,12 +30,14 @@ GLOBAL OPTIONS:
    --help, -h                        show help
    --version, -v                     print the version
 
+
+
 ./cloudcli oss -h
 NAME:
    cloudcli oss - aliyun OSS API tool
 
 USAGE:
-   cloudcli oss command \[command options] \[arguments...]
+   cloudcli oss command [command options] [arguments...]
 
 COMMANDS:
      upload, ul            upload files to a oss bucket
@@ -48,3 +50,16 @@ COMMANDS:
 
 OPTIONS:
    --help, -h  show help
+
+
+./cloudcli oss del -h
+NAME:
+   cloudcli oss delete - delete object
+
+USAGE:
+   cloudcli oss delete [command options] [arguments...]
+
+OPTIONS:
+   -b bucket  bucket name
+   -o object  object name
+   --all      delete all objects in a bucket
