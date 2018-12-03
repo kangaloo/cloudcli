@@ -1,0 +1,7 @@
+package misc
+
+func InitLog()  {
+
+
+
+}
