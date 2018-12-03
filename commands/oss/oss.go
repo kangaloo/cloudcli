@@ -35,7 +35,7 @@ var ossUploadFlags = []cli.Flag{
 		Usage: "`bucket` name",
 	},
 	cli.IntFlag{
-		Name: "p",
+		Name:  "p",
 		Usage: "prat size `number`",
 		Value: 1024 * 100,
 	},
@@ -128,20 +128,20 @@ var ossDownloadFlags = []cli.Flag{
 		Usage: "`bucket` name",
 	},
 	cli.StringFlag{
-		Name: "o",
+		Name:  "o",
 		Usage: "`object` name",
 	},
 	cli.StringFlag{
-		Name: "f",
+		Name:  "f",
 		Usage: "download object as `file`",
 	},
 	cli.IntFlag{
-		Name: "p",
+		Name:  "p",
 		Usage: "prat size `number`",
 		Value: 1024 * 100,
 	},
 	cli.BoolFlag{
-		Name: "overwrite",
+		Name:  "overwrite",
 		Usage: "overwrite a exist file when download",
 	},
 }
@@ -192,5 +192,9 @@ var ossDelFlags = []cli.Flag{
 	cli.StringFlag{
 		Name:  "o",
 		Usage: "`object` name",
+	},
+	cli.BoolFlag{
+		Name:  "all",
+		Usage: "delete all objects in a bucket",
 	},
 }

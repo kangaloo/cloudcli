@@ -82,6 +82,46 @@ func ListObjects(c *cli.Context) error {
 		return nil
 	}
 
+	/*
+		var objects []oss.ObjectProperties
+
+		marker := oss.Marker("")
+
+		for {
+			objs, err := bucket.ListObjects(marker, oss.MaxKeys(1000))
+
+			if err != nil {
+				return err
+			}
+
+			marker = oss.Marker(objs.NextMarker)
+			objects = append(objects, objs.Objects...)
+
+			if !objs.IsTruncated {
+				break
+			}
+		}
+	*/
+
+	objects, err := listAllObjs(bucket)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(color.New(color.FgHiCyan).Sprint("    size  object"))
+
+	for _, obj := range objects {
+		fmt.Printf(
+			"%s  %s\n",
+			color.New(color.FgHiBlack).SprintfFunc()("%s", fmt.Sprintf("%8s", "["+file.SmartSize(obj.Size)+"]")),
+			obj.Key,
+		)
+	}
+
+	return nil
+}
+
+func listAllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
 	var objects []oss.ObjectProperties
 
 	marker := oss.Marker("")
@@ -90,7 +130,7 @@ func ListObjects(c *cli.Context) error {
 		objs, err := bucket.ListObjects(marker, oss.MaxKeys(1000))
 
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		marker = oss.Marker(objs.NextMarker)
@@ -101,15 +141,5 @@ func ListObjects(c *cli.Context) error {
 		}
 	}
 
-	fmt.Println(color.New(color.FgHiCyan).Sprint("    size  object"))
-
-	for _, obj := range objects {
-		fmt.Printf(
-			"%s  %s\n",
-			color.New(color.FgHiBlack).SprintfFunc()("%s", fmt.Sprintf("%8s", "[" + file.SmartSize(obj.Size) + "]")),
-			obj.Key,
-		)
-	}
-
-	return nil
+	return objects, nil
 }

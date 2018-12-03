@@ -1,6 +1,9 @@
 package cloud
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/kangaloo/cloudcli/display"
+)
 
 func NewNecessaryFlagErr(flag string) error {
 	return &necessaryFlagErr{flag: flag}
@@ -11,18 +14,7 @@ type necessaryFlagErr struct {
 }
 
 func (e *necessaryFlagErr) Error() string {
-
-	var flag string
-
-	if len(e.flag) == 1 {
-		flag = "-" + e.flag
-	}
-
-	if len(e.flag) > 1 {
-		flag = "--" + e.flag
-	}
-
-	return fmt.Sprintf("missing necessary flag '%s'", flag)
+	return fmt.Sprintf("missing necessary flag '%s'", display.PrettyFlag(e.flag))
 }
 
 func NewConflictFlagErr(flag, conflictFlag string) error {
@@ -38,7 +30,7 @@ type conflictFlagErr struct {
 }
 
 func (e *conflictFlagErr) Error() string {
-	return fmt.Sprintf("flag '%s' conflict with '%s'", e.flag, e.conflictFlag)
+	return fmt.Sprintf("flag '%s' conflict with '%s'", display.PrettyFlag(e.flag), display.PrettyFlag(e.conflictFlag))
 }
 
 func NewEitherOrFlagErr(flag, either string) error {
@@ -54,7 +46,7 @@ type eitherOrFlagErr struct {
 }
 
 func (e *eitherOrFlagErr) Error() string {
-	return fmt.Sprintf("one flag must be chosen between '%s' and '%s'", e.flag, e.either)
+	return fmt.Sprintf("either '%s' or '%s' must be provided", display.PrettyFlag(e.flag), display.PrettyFlag(e.either))
 }
 
 func NewNotDefinedFlagErr(flag string) error {
@@ -68,5 +60,5 @@ type notDefinedFlagErr struct {
 }
 
 func (e notDefinedFlagErr) Error() string {
-	return fmt.Sprintf("flag '%s' is flag checklist not defined", e.flag)
+	return fmt.Sprintf("flag '%s' is flag checklist not defined", display.PrettyFlag(e.flag))
 }

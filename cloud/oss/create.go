@@ -1,28 +1,30 @@
 package oss
 
 import (
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/kangaloo/cloudcli/cloud"
 	"github.com/urfave/cli"
 )
 
 // CreateBucket create a bucket
-func CreateBucket(c *cli.Context) error  {
+func CreateBucket(c *cli.Context) error {
+
+	var (
+		client *oss.Client
+		err    error
+	)
 
 	necessary := []string{"b"}
 
-	if err := cloud.NecessaryCheck(c, necessary...); err != nil {
+	if err = cloud.NecessaryCheck(c, necessary...); err != nil {
 		return err
 	}
 
-	client, err := NewOssClient(c.App.Metadata["config"])
-
-	if err != nil {
+	if client, err = NewOssClient(c.App.Metadata["config"]); err != nil {
 		return err
 	}
 
-	err = client.CreateBucket(c.String("b"))
-
-	if err != nil {
+	if err = client.CreateBucket(c.String("b")); err != nil {
 		return err
 	}
 

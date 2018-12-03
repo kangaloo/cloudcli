@@ -6,6 +6,7 @@ import "github.com/urfave/cli"
 func NecessaryCheck(c *cli.Context, flags ...string) error {
 	for _, flag := range flags {
 		if !c.IsSet(flag) {
+			_ = cli.ShowSubcommandHelp(c)
 			return NewNecessaryFlagErr(flag)
 		}
 	}
@@ -13,10 +14,13 @@ func NecessaryCheck(c *cli.Context, flags ...string) error {
 	return nil
 }
 
+// 必须二选一的两个参数一定是冲突参数
+
 // 检查是否同时提供了会冲突的参数
 func ConflictCheck(c *cli.Context, pairs [][]string) error {
 	for _, pair := range pairs {
 		if c.IsSet(pair[0]) && c.IsSet(pair[1]) {
+			_ = cli.ShowSubcommandHelp(c)
 			return NewConflictFlagErr(pair[0], pair[1])
 		}
 	}
@@ -28,6 +32,7 @@ func ConflictCheck(c *cli.Context, pairs [][]string) error {
 func EitherOrCheck(c *cli.Context, pairs [][]string) error {
 	for _, pair := range pairs {
 		if !(c.IsSet(pair[0]) || c.IsSet(pair[1])) || (c.IsSet(pair[0]) && c.IsSet(pair[1])) {
+			_ = cli.ShowSubcommandHelp(c)
 			return NewEitherOrFlagErr(pair[0], pair[1])
 		}
 	}
@@ -36,8 +41,11 @@ func EitherOrCheck(c *cli.Context, pairs [][]string) error {
 }
 
 // 检查检查参数列表中的参数是否都是定义过的，属于程序的自检测
-// names 可通过 c.Names() 获取
-func DefinedCheck(names []string, flagsSlice ...[]string) error {
+// 不需要，cli层自动处理
+// flag provided but not defined: -p
+func DefinedCheck(c *cli.Context, flagsSlice ...[]string) error {
+	names := c.FlagNames()
+
 	for _, flags := range flagsSlice {
 	defined:
 		for _, flag := range flags {
@@ -47,6 +55,7 @@ func DefinedCheck(names []string, flagsSlice ...[]string) error {
 				}
 			}
 
+			_ = cli.ShowSubcommandHelp(c)
 			return NewNotDefinedFlagErr(flag)
 		}
 	}
