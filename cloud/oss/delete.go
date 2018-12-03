@@ -13,6 +13,7 @@ func DelBucket(c *cli.Context) error {
 
 	var (
 		client *oss.Client
+		exist  bool
 		err    error
 	)
 
@@ -26,9 +27,20 @@ func DelBucket(c *cli.Context) error {
 		return err
 	}
 
+	if exist, err = client.IsBucketExist(c.String("b")); err != nil {
+		return err
+	}
+
+	if !exist {
+		fmt.Printf("%s bucket '%s' not exist\n", display.HiBlack("message:"), c.String("b"))
+		return nil
+	}
+
 	if err = client.DeleteBucket(c.String("b")); err != nil {
 		return err
 	}
+
+	fmt.Printf("%s bucket '%s' deleted\n", display.HiBlack("message:"), c.String("b"))
 
 	return nil
 }
