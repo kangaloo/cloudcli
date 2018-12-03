@@ -1,6 +1,7 @@
 # build
-
+```
 go build cloudcli.go
+```
 
 # run a command
 ```
@@ -63,3 +64,4 @@ OPTIONS:
    -b bucket  bucket name
    -o object  object name
    --all      delete all objects in a bucket
+```
