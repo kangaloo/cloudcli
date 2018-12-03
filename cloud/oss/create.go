@@ -1,8 +1,11 @@
 package oss
 
 import (
+	"errors"
+	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/kangaloo/cloudcli/cloud"
+	"github.com/kangaloo/cloudcli/display"
 	"github.com/urfave/cli"
 )
 
@@ -11,6 +14,7 @@ func CreateBucket(c *cli.Context) error {
 
 	var (
 		client *oss.Client
+		exist  bool
 		err    error
 	)
 
@@ -28,5 +32,14 @@ func CreateBucket(c *cli.Context) error {
 		return err
 	}
 
-	return nil
+	if exist, err = client.IsBucketExist(c.String("b")); err != nil {
+		return err
+	}
+
+	if exist {
+		fmt.Printf("%s bucket '%s' created\n", display.HiBlack("message:"), c.String("b"))
+		return nil
+	}
+
+	return errors.New("create bucket failed")
 }
