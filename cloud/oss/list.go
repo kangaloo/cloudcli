@@ -82,27 +82,6 @@ func ListObjects(c *cli.Context) error {
 		return nil
 	}
 
-	/*
-		var objects []oss.ObjectProperties
-
-		marker := oss.Marker("")
-
-		for {
-			objs, err := bucket.ListObjects(marker, oss.MaxKeys(1000))
-
-			if err != nil {
-				return err
-			}
-
-			marker = oss.Marker(objs.NextMarker)
-			objects = append(objects, objs.Objects...)
-
-			if !objs.IsTruncated {
-				break
-			}
-		}
-	*/
-
 	objects, err := listAllObjs(bucket)
 	if err != nil {
 		return err
