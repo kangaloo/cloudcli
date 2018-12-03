@@ -45,6 +45,7 @@ func NewOssClient(configInter interface{}) (*oss.Client, error) {
 		aks = conf.GlobalFlag.AccessKeySecret
 	}
 
+	// if the parameters are empty strings, oss.New will panic
 	if err = config.LengthCheck(endpoint, ak, aks); err != nil {
 		return nil, err
 	}
