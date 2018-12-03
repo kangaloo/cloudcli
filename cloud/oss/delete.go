@@ -41,7 +41,6 @@ func DelBucket(c *cli.Context) error {
 	}
 
 	fmt.Printf("%s bucket '%s' deleted\n", display.HiBlack("message:"), c.String("b"))
-
 	return nil
 }
 
