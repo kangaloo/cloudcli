@@ -6,7 +6,20 @@ import (
 )
 
 // 至多有一个的参数
-func AtMostOneCheck(c *cli.Context) error {
+func AtMostOneCheck(c *cli.Context, lists [][]string) error {
+	for _, list := range lists {
+		var provided []string
+
+		for _, flag := range list {
+			if c.IsSet(flag) {
+				provided = append(provided, flag)
+			}
+		}
+
+		if len(provided) > 1 {
+			return NewConflictFlagErr(provided)
+		}
+	}
 	return nil
 }
 
