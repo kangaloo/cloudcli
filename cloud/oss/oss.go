@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/fatih/color"
+	"github.com/kangaloo/cloudcli/commands/flagscheck"
 	"github.com/kangaloo/cloudcli/config"
 	"github.com/kangaloo/cloudcli/display"
 )
@@ -47,7 +48,7 @@ func NewOssClient(configInter interface{}) (*oss.Client, error) {
 	}
 
 	// if the parameters are empty strings, oss.New will panic
-	if err = config.LengthCheck(endpoint, ak, aks); err != nil {
+	if err = flagscheck.LengthCheck(endpoint, ak, aks); err != nil {
 		return nil, err
 	}
 

@@ -1,6 +1,9 @@
 package flagscheck
 
-import "github.com/urfave/cli"
+import (
+	"errors"
+	"github.com/urfave/cli"
+)
 
 // 必须二选一的参数
 func EitherOrCheck(c *cli.Context, pairs [][]string) error {
@@ -60,5 +63,21 @@ func NecessaryCheck(c *cli.Context, flags ...string) error {
 		}
 	}
 
+	return nil
+}
+
+func LengthCheck(params ...string) error {
+	for _, param := range params {
+		if param == "" {
+			return errors.New("parameter is empty string")
+		}
+	}
+
+	return nil
+}
+
+// Command line parameters
+
+func checkGlobalParam() error {
 	return nil
 }

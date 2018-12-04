@@ -7,12 +7,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-// Command line parameters
-
-func checkGlobalParam() error {
-	return nil
-}
-
 func parseGlobalFlags(c *cli.Context, config *Config) {
 
 	// TODO d debug 暂时不能正常使用，需要合适的log包
@@ -73,14 +67,4 @@ func ConvertConfig(config interface{}) (*Config, error) {
 	}
 
 	return nil, errors.New("convert config from interface{} to *config{} failed")
-}
-
-func LengthCheck(params ...string) error {
-	for _, param := range params {
-		if param == "" {
-			return errors.New("parameter is empty string")
-		}
-	}
-
-	return nil
 }
