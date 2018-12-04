@@ -6,6 +6,7 @@ import (
 )
 
 // 至多有一个的参数
+// 此函数可取代 ConflictCheck
 func AtMostOneCheck(c *cli.Context, lists [][]string) error {
 	for _, list := range lists {
 		var provided []string

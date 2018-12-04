@@ -64,26 +64,37 @@ func ListObjects(c *cli.Context) error {
 	// 冲突参数检查
 	// 特殊参数检查
 
+	var (
+		client  *oss.Client
+		bucket  *oss.Bucket
+		objects []oss.ObjectProperties
+		err     error
+	)
+
+	conflict := [][]string{
+		{"n", "all"},
+		{"prefix", "suffix"},
+	}
+
 	necessary := []string{"b"}
 
-	if err := flagscheck.NecessaryCheck(c, necessary...); err != nil {
+	if err = flagscheck.AtMostOneCheck(c, conflict); err != nil {
 		return err
 	}
 
-	client, err := NewOssClient(c.App.Metadata["config"])
-
-	if err != nil {
+	if err = flagscheck.NecessaryCheck(c, necessary...); err != nil {
 		return err
 	}
 
-	bucket, err := client.Bucket(c.String("b"))
-
-	if err != nil {
-		return nil
+	if client, err = NewOssClient(c.App.Metadata["config"]); err != nil {
+		return err
 	}
 
-	objects, err := listAllObjs(bucket)
-	if err != nil {
+	if bucket, err = client.Bucket(c.String("b")); err != nil {
+		return err
+	}
+
+	if objects, err = listAllObjs(bucket); err != nil {
 		return err
 	}
 
@@ -121,4 +132,9 @@ func listAllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
 	}
 
 	return objects, nil
+}
+
+func printObjects(c *cli.Context, objects []oss.ObjectProperties) error {
+
+	return nil
 }

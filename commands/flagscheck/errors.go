@@ -50,7 +50,7 @@ func (e *conflictFlagErr) Error() string {
 		flags = append(flags, display.PrettyFlag(flag))
 	}
 
-	return fmt.Sprintf("conflict flags %s at same time provided", strings.Join(flags, " ,"))
+	return fmt.Sprintf("conflict flags %s provided at the same time", strings.Join(flags, ", "))
 }
 
 func NewNotDefinedFlagErr(flag string) error {
