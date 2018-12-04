@@ -3,6 +3,7 @@ package flagscheck
 import (
 	"fmt"
 	"github.com/kangaloo/cloudcli/display"
+	"strings"
 )
 
 func NewEitherOrFlagErr(flag, either string) error {
@@ -33,20 +34,23 @@ func (e *necessaryFlagErr) Error() string {
 	return fmt.Sprintf("missing necessary flag '%s'", display.PrettyFlag(e.flag))
 }
 
-func NewConflictFlagErr(flag, conflictFlag string) error {
+func NewConflictFlagErr(flags []string) error {
 	return &conflictFlagErr{
-		flag:         flag,
-		conflictFlag: conflictFlag,
+		flags: flags,
 	}
 }
 
 type conflictFlagErr struct {
-	flag         string
-	conflictFlag string
+	flags []string
 }
 
 func (e *conflictFlagErr) Error() string {
-	return fmt.Sprintf("flag '%s' conflict with '%s'", display.PrettyFlag(e.flag), display.PrettyFlag(e.conflictFlag))
+	var flags []string
+	for _, flag := range e.flags {
+		flags = append(flags, display.PrettyFlag(flag))
+	}
+
+	return fmt.Sprintf("conflict flags %s at same time provided", strings.Join(flags, " ,"))
 }
 
 func NewNotDefinedFlagErr(flag string) error {

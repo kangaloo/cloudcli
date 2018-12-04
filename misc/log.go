@@ -1,7 +1,5 @@
 package misc
 
-func InitLog()  {
-
-
+func InitLog() {
 
 }

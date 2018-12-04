@@ -21,7 +21,7 @@ func ListEcs(c *cli.Context) error {
 	return nil
 }
 
-func Info(c *cli.Context) error  {
+func Info(c *cli.Context) error {
 	fmt.Println("invoke ecs > info function")
 
 	if !c.IsSet("id") {

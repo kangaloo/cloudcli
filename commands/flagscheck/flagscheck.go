@@ -5,28 +5,38 @@ import (
 	"github.com/urfave/cli"
 )
 
+// 至多有一个的参数
+func AtMostOneCheck(c *cli.Context) error {
+	return nil
+}
+
 // 必须二选一的参数
-// 此函数可被 MustOnlyOne 替代
 func EitherOrCheck(c *cli.Context, pairs [][]string) error {
 	for _, pair := range pairs {
-		if !(c.IsSet(pair[0]) || c.IsSet(pair[1])) || (c.IsSet(pair[0]) && c.IsSet(pair[1])) {
+
+		/*
+			if !(c.IsSet(pair[0]) || c.IsSet(pair[1])) || (c.IsSet(pair[0]) && c.IsSet(pair[1])) {
+				_ = cli.ShowSubcommandHelp(c)
+				return NewEitherOrFlagErr(pair[0], pair[1])
+			}
+		*/
+
+		if !(c.IsSet(pair[0]) || c.IsSet(pair[1])) {
 			_ = cli.ShowSubcommandHelp(c)
 			return NewEitherOrFlagErr(pair[0], pair[1])
+		}
+
+		if c.IsSet(pair[0]) && c.IsSet(pair[1]) {
+			_ = cli.ShowSubcommandHelp(c)
+			return NewConflictFlagErr(pair)
 		}
 	}
 
 	return nil
 }
 
-// 必须二选一的两个参数一定是冲突参数
-
-// 至多有一个的参数
-func AtMostOne(c *cli.Context) error {
-	return nil
-}
-
 // MustOnlyOne 只能且必须提供一个的参数
-func MustOnlyOne(c *cli.Context, lists [][]string) error {
+func MustOnlyOneCheck(c *cli.Context, lists [][]string) error {
 	for _, list := range lists {
 		var provided []string
 
@@ -37,13 +47,12 @@ func MustOnlyOne(c *cli.Context, lists [][]string) error {
 		}
 
 		if len(provided) == 0 {
-			// TODO 定义错误类型
-			return errors.New("")
+			// TODO 定义新的错误类型
+			return NewConflictFlagErr(provided)
 		}
 
 		if len(provided) > 1 {
-			// TODO 定义错误类型
-			return errors.New("")
+			return NewConflictFlagErr(provided)
 		}
 	}
 	return nil
@@ -54,7 +63,7 @@ func ConflictCheck(c *cli.Context, pairs [][]string) error {
 	for _, pair := range pairs {
 		if c.IsSet(pair[0]) && c.IsSet(pair[1]) {
 			_ = cli.ShowSubcommandHelp(c)
-			return NewConflictFlagErr(pair[0], pair[1])
+			return NewConflictFlagErr(pair)
 		}
 	}
 

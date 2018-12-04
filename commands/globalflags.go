@@ -10,7 +10,7 @@ var GlobalFlags = []cli.Flag{
 		Usage: "specify the configuration `file`",
 	},
 	cli.BoolFlag{
-		Name: "d",
+		Name:  "d",
 		Usage: "debug",
 	},
 	cli.StringFlag{
@@ -34,4 +34,3 @@ func AddGlobalFlags(app *cli.App, flags []cli.Flag) {
 func AddCmd(app *cli.App, command *cli.Command) {
 	app.Commands = append(app.Commands, *command)
 }
-

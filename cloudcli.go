@@ -28,7 +28,6 @@ func main() {
 	// 初始化配置
 	app.Before = config.InitConfig
 
-
 	// 初始化子命令，当前只用oss子命令
 	commands.AddCmd(app, oss.Oss)
 	//commands.AddCmd(app, ecs.Ecs)
