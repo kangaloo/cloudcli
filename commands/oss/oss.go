@@ -67,8 +67,7 @@ var ossListBkFlags = []cli.Flag{
 		Usage: "`bucket` name",
 	},
 	cli.BoolFlag{
-		Name: "s",
-		// smartSize
+		Name:  "s",
 		Usage: "show size",
 	},
 	cli.IntFlag{
@@ -191,7 +190,7 @@ var ossDelFlags = []cli.Flag{
 	},
 	cli.StringFlag{
 		Name:  "o",
-		Usage: "`object` name",
+		Usage: "delete one `object` by name",
 	},
 	cli.StringFlag{
 		Name:  "prefix",
