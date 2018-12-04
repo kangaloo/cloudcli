@@ -124,7 +124,7 @@ func deleteOne(bucket *oss.Bucket, key string) error {
 // deleteAll delete all objects in a bucket
 func deleteAll(bucket *oss.Bucket) error {
 
-	objects, err := listAllObjs(bucket)
+	objects, err := getAllObjs(bucket)
 	if err != nil {
 		return err
 	}

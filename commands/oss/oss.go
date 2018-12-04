@@ -89,14 +89,14 @@ var ossListFlags = []cli.Flag{
 		Name:  "b",
 		Usage: "`bucket` name",
 	},
-	cli.BoolFlag{
+	cli.BoolTFlag{
 		Name:  "q",
 		Usage: "do not show the header",
 		//	注意 -s 参数对表头的影响
 	},
 	cli.BoolTFlag{
 		Name:  "s",
-		Usage: "show object size",
+		Usage: "do not show object size",
 	},
 	cli.IntFlag{
 		Name:  "n",

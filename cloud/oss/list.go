@@ -94,24 +94,18 @@ func ListObjects(c *cli.Context) error {
 		return err
 	}
 
-	if objects, err = listAllObjs(bucket); err != nil {
+	if objects, err = getAllObjs(bucket); err != nil {
 		return err
 	}
 
-	fmt.Println(color.New(color.FgHiCyan).Sprint("    size  object"))
-
-	for _, obj := range objects {
-		fmt.Printf(
-			"%s  %s\n",
-			color.New(color.FgHiBlack).SprintfFunc()("%s", fmt.Sprintf("%8s", "["+display.SmartSize(obj.Size)+"]")),
-			obj.Key,
-		)
+	if err = printObjects(c, objects); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func listAllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
+func getAllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
 	var objects []oss.ObjectProperties
 
 	marker := oss.Marker("")
@@ -136,5 +130,17 @@ func listAllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
 
 func printObjects(c *cli.Context, objects []oss.ObjectProperties) error {
 
+	if c.BoolT("q") {
+		// todo 不生效
+		fmt.Println(color.New(color.FgHiCyan).Sprint("    size  object"))
+	}
+
+	for _, obj := range objects {
+		fmt.Printf(
+			"%s  %s\n",
+			color.New(color.FgHiBlack).SprintfFunc()("%s", fmt.Sprintf("%8s", "["+display.SmartSize(obj.Size)+"]")),
+			obj.Key,
+		)
+	}
 	return nil
 }
