@@ -193,6 +193,14 @@ var ossDelFlags = []cli.Flag{
 		Name:  "o",
 		Usage: "`object` name",
 	},
+	cli.StringFlag{
+		Name:  "prefix",
+		Usage: "delete objects by `prefix`",
+	},
+	cli.StringFlag{
+		Name:  "suffix",
+		Usage: "delete objects by `suffix`",
+	},
 	cli.BoolFlag{
 		Name:  "all",
 		Usage: "delete all objects in a bucket",
