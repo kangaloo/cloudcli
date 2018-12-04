@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/kangaloo/cloudcli/cloud"
 	"github.com/kangaloo/cloudcli/commands/flagscheck"
 	"github.com/kangaloo/cloudcli/display"
 	"github.com/urfave/cli"
