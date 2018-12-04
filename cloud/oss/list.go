@@ -5,7 +5,7 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/fatih/color"
 	"github.com/kangaloo/cloudcli/cloud"
-	"github.com/kangaloo/cloudcli/file"
+	"github.com/kangaloo/cloudcli/display"
 	"github.com/urfave/cli"
 )
 
@@ -92,7 +92,7 @@ func ListObjects(c *cli.Context) error {
 	for _, obj := range objects {
 		fmt.Printf(
 			"%s  %s\n",
-			color.New(color.FgHiBlack).SprintfFunc()("%s", fmt.Sprintf("%8s", "["+file.SmartSize(obj.Size)+"]")),
+			color.New(color.FgHiBlack).SprintfFunc()("%s", fmt.Sprintf("%8s", "["+display.SmartSize(obj.Size)+"]")),
 			obj.Key,
 		)
 	}

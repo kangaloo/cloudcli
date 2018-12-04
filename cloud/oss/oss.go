@@ -5,6 +5,7 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/fatih/color"
 	"github.com/kangaloo/cloudcli/config"
+	"github.com/kangaloo/cloudcli/display"
 )
 
 func NewOssClient(configInter interface{}) (*oss.Client, error) {
@@ -61,7 +62,7 @@ func (listener *ossProgressListener) ProgressChanged(event *oss.ProgressEvent) {
 	switch event.EventType {
 	case oss.TransferStartedEvent:
 		fmt.Printf("Transfer Started, ConsumedBytes: %d, TotalBytes %d (%s)\n",
-			event.ConsumedBytes, event.TotalBytes, smartSize(event.TotalBytes))
+			event.ConsumedBytes, event.TotalBytes, display.SmartSize(event.TotalBytes))
 	case oss.TransferDataEvent:
 		fmt.Printf(
 			"\rTransfer Data, ConsumedBytes: %s, TotalBytes %s, %d%%.",
@@ -77,25 +78,4 @@ func (listener *ossProgressListener) ProgressChanged(event *oss.ProgressEvent) {
 			event.ConsumedBytes, event.TotalBytes)
 	default:
 	}
-}
-
-func smartSize(s int64) string {
-
-	if s < 1024 {
-		return fmt.Sprintf("%d B", s)
-	}
-
-	if s < 1024*1024 {
-		return fmt.Sprintf("%d KB", s/1024)
-	}
-
-	if s < 1024*1024*1024 {
-		return fmt.Sprintf("%d MB", s/1024/1024)
-	}
-
-	if s < 1024*1024*1024*1024 {
-		return fmt.Sprintf("%d GB", s/1024/1024/1024)
-	}
-
-	return fmt.Sprintf("%d TB", s/1024/1024/1024/1024)
 }

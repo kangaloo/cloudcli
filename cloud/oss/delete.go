@@ -138,3 +138,11 @@ func deleteAll(bucket *oss.Bucket) error {
 
 	return nil
 }
+
+func deleteByPrefix(bucket *oss.Bucket, prefix string) error {
+	return nil
+}
+
+func deleteBySuffix(bucket *oss.Bucket, suffix string) error {
+	return nil
+}
