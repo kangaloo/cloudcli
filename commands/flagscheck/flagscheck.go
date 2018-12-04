@@ -1,13 +1,13 @@
-package cloud
+package flagscheck
 
 import "github.com/urfave/cli"
 
-// 检查必要的参数是否都已经提供
-func NecessaryCheck(c *cli.Context, flags ...string) error {
-	for _, flag := range flags {
-		if !c.IsSet(flag) {
+// 必须二选一的参数
+func EitherOrCheck(c *cli.Context, pairs [][]string) error {
+	for _, pair := range pairs {
+		if !(c.IsSet(pair[0]) || c.IsSet(pair[1])) || (c.IsSet(pair[0]) && c.IsSet(pair[1])) {
 			_ = cli.ShowSubcommandHelp(c)
-			return NewNecessaryFlagErr(flag)
+			return NewEitherOrFlagErr(pair[0], pair[1])
 		}
 	}
 
@@ -22,18 +22,6 @@ func ConflictCheck(c *cli.Context, pairs [][]string) error {
 		if c.IsSet(pair[0]) && c.IsSet(pair[1]) {
 			_ = cli.ShowSubcommandHelp(c)
 			return NewConflictFlagErr(pair[0], pair[1])
-		}
-	}
-
-	return nil
-}
-
-// 必须二选一的参数
-func EitherOrCheck(c *cli.Context, pairs [][]string) error {
-	for _, pair := range pairs {
-		if !(c.IsSet(pair[0]) || c.IsSet(pair[1])) || (c.IsSet(pair[0]) && c.IsSet(pair[1])) {
-			_ = cli.ShowSubcommandHelp(c)
-			return NewEitherOrFlagErr(pair[0], pair[1])
 		}
 	}
 
@@ -57,6 +45,18 @@ func DefinedCheck(c *cli.Context, flagsSlice ...[]string) error {
 
 			_ = cli.ShowSubcommandHelp(c)
 			return NewNotDefinedFlagErr(flag)
+		}
+	}
+
+	return nil
+}
+
+// 检查必要的参数是否都已经提供
+func NecessaryCheck(c *cli.Context, flags ...string) error {
+	for _, flag := range flags {
+		if !c.IsSet(flag) {
+			_ = cli.ShowSubcommandHelp(c)
+			return NewNecessaryFlagErr(flag)
 		}
 	}
 

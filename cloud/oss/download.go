@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/kangaloo/cloudcli/cloud"
+	"github.com/kangaloo/cloudcli/commands/flagscheck"
 	"github.com/kangaloo/cloudcli/file"
 	"github.com/urfave/cli"
 )
@@ -14,7 +15,7 @@ func Download(c *cli.Context) error {
 
 	necessary := []string{"b", "o", "f"}
 
-	if err := cloud.NecessaryCheck(c, necessary...); err != nil {
+	if err := flagscheck.NecessaryCheck(c, necessary...); err != nil {
 		return err
 	}
 

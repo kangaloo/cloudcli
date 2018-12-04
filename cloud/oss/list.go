@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/fatih/color"
-	"github.com/kangaloo/cloudcli/cloud"
+	"github.com/kangaloo/cloudcli/commands/flagscheck"
 	"github.com/kangaloo/cloudcli/display"
 	"github.com/urfave/cli"
 )
@@ -66,7 +66,7 @@ func ListObjects(c *cli.Context) error {
 
 	necessary := []string{"b"}
 
-	if err := cloud.NecessaryCheck(c, necessary...); err != nil {
+	if err := flagscheck.NecessaryCheck(c, necessary...); err != nil {
 		return err
 	}
 
