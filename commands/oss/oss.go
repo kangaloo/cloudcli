@@ -91,17 +91,17 @@ var ossListFlags = []cli.Flag{
 	},
 	cli.BoolFlag{
 		Name:  "q",
-		Usage: "",
-		//	不显示表头
+		Usage: "do not show the header",
+		//	注意 -s 参数对表头的影响
 	},
-	cli.BoolFlag{
-		Name: "s",
-		// smartSize
-		Usage: "show size",
+	cli.BoolTFlag{
+		Name:  "s",
+		Usage: "show object size",
 	},
 	cli.IntFlag{
-		Name:  "m",
-		Usage: "max `number` of listed objects",
+		Name:  "n",
+		Usage: "`number` of listed objects",
+		Value: 10,
 	},
 	cli.StringFlag{
 		Name:  "prefix",
@@ -117,7 +117,7 @@ var ossListFlags = []cli.Flag{
 	},
 	cli.StringFlag{
 		Name:  "marker",
-		Usage: "",
+		Usage: "oss `marker`",
 	},
 }
 
