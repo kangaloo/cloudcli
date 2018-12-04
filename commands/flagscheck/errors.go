@@ -45,6 +45,10 @@ type conflictFlagErr struct {
 	conflictFlag string
 }
 
+func (e *conflictFlagErr) Error() string {
+	return fmt.Sprintf("flag '%s' conflict with '%s'", display.PrettyFlag(e.flag), display.PrettyFlag(e.conflictFlag))
+}
+
 func NewNotDefinedFlagErr(flag string) error {
 	return &notDefinedFlagErr{
 		flag: flag,
