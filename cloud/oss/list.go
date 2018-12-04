@@ -63,6 +63,7 @@ func ListObjects(c *cli.Context) error {
 	// 必要参数检查
 	// 冲突参数检查
 	// 特殊参数检查
+	// b q s n prefix suffix all
 
 	var (
 		client  *oss.Client
@@ -94,7 +95,7 @@ func ListObjects(c *cli.Context) error {
 		return err
 	}
 
-	if objects, err = getAllObjs(bucket); err != nil {
+	if objects, err = getAllObjs(c, bucket); err != nil {
 		return err
 	}
 
@@ -105,12 +106,33 @@ func ListObjects(c *cli.Context) error {
 	return nil
 }
 
-func getAllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
+func getAllObjs(c *cli.Context, bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
+
+	if c.Bool("all") {
+		objects, err := AllObjs(bucket)
+		if err != nil {
+			return nil, err
+		}
+
+		return objects, nil
+	}
+
+	res, err := bucket.ListObjects(oss.MaxKeys(c.Int("n")))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res.Objects, nil
+}
+
+func AllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
 	var objects []oss.ObjectProperties
 
 	marker := oss.Marker("")
 
 	for {
+
 		objs, err := bucket.ListObjects(marker, oss.MaxKeys(1000))
 
 		if err != nil {

@@ -44,6 +44,7 @@ func DelBucket(c *cli.Context) error {
 	return nil
 }
 
+// delete 可以完全复用 list 的 flag，删除list的结果即可
 func DelObject(c *cli.Context) error {
 
 	var (
@@ -122,9 +123,10 @@ func deleteOne(bucket *oss.Bucket, key string) error {
 }
 
 // deleteAll delete all objects in a bucket
+// 该函数依赖 getAllObjs() 需要设置 --all 的默认之为true才能生效
 func deleteAll(bucket *oss.Bucket) error {
 
-	objects, err := getAllObjs(bucket)
+	objects, err := AllObjs(bucket)
 	if err != nil {
 		return err
 	}
