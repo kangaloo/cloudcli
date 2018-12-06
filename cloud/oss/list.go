@@ -63,7 +63,10 @@ func ListObjects(c *cli.Context) error {
 	// 必要参数检查
 	// 冲突参数检查
 	// 特殊参数检查
-	// b q s n prefix suffix all
+	// finished -b -q
+	//  -n --prefix --suffix --all
+	// --presuffix
+	// 键的最大长度 --max-length
 
 	var (
 		client  *oss.Client
@@ -152,17 +155,21 @@ func AllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
 
 func printObjects(c *cli.Context, objects []oss.ObjectProperties) error {
 
-	if c.BoolT("q") {
-		// todo 不生效
+	if !c.Bool("q") {
 		fmt.Println(color.New(color.FgHiCyan).Sprint("    size  object"))
+
+		for _, obj := range objects {
+			fmt.Printf(
+				"%s  %s\n",
+				color.New(color.FgHiBlack).SprintfFunc()("%s", fmt.Sprintf("%8s", "["+display.SmartSize(obj.Size)+"]")),
+				obj.Key,
+			)
+		}
 	}
 
 	for _, obj := range objects {
-		fmt.Printf(
-			"%s  %s\n",
-			color.New(color.FgHiBlack).SprintfFunc()("%s", fmt.Sprintf("%8s", "["+display.SmartSize(obj.Size)+"]")),
-			obj.Key,
-		)
+		fmt.Printf("%s\n", obj.Key)
 	}
+
 	return nil
 }
