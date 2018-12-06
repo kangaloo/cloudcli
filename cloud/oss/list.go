@@ -102,9 +102,7 @@ func ListObjects(c *cli.Context) error {
 		return err
 	}
 
-	if err = printObjects(c, objects); err != nil {
-		return err
-	}
+	printObjects(c, objects)
 
 	return nil
 }
@@ -153,7 +151,7 @@ func AllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
 	return objects, nil
 }
 
-func printObjects(c *cli.Context, objects []oss.ObjectProperties) error {
+func printObjects(c *cli.Context, objects []oss.ObjectProperties) {
 
 	if !c.Bool("q") {
 		fmt.Println(color.New(color.FgHiCyan).Sprint("    size  object"))
@@ -161,15 +159,20 @@ func printObjects(c *cli.Context, objects []oss.ObjectProperties) error {
 		for _, obj := range objects {
 			fmt.Printf(
 				"%s  %s\n",
-				color.New(color.FgHiBlack).SprintfFunc()("%s", fmt.Sprintf("%8s", "["+display.SmartSize(obj.Size)+"]")),
+				color.New(color.FgHiBlack).SprintfFunc()(
+					"%s",
+					fmt.Sprintf("%8s", "["+display.SmartSize(obj.Size)+"]"),
+				),
 				obj.Key,
 			)
 		}
+
+		return
 	}
 
 	for _, obj := range objects {
 		fmt.Printf("%s\n", obj.Key)
 	}
 
-	return nil
+	return
 }
