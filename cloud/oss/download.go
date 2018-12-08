@@ -9,6 +9,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+// --prefix
 func Download(c *cli.Context) error {
 	// TODO 参数检查
 

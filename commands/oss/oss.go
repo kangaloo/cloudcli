@@ -102,10 +102,6 @@ var ossListFlags = []cli.Flag{
 		Name:  "prefix",
 		Usage: "list objects by `prefix`",
 	},
-	cli.StringFlag{
-		Name:  "suffix",
-		Usage: "list objects by `suffix`",
-	},
 	cli.BoolFlag{
 		Name:  "all",
 		Usage: "list all objects in a bucket",

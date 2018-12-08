@@ -64,7 +64,7 @@ func ListObjects(c *cli.Context) error {
 	// 冲突参数检查
 	// 特殊参数检查
 	// finished -b -q
-	//  -n --prefix  --all
+	// finished -n --prefix  --all
 
 	var (
 		client  *oss.Client
@@ -108,7 +108,7 @@ func ListObjects(c *cli.Context) error {
 func getAllObjs(c *cli.Context, bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
 
 	if c.Bool("all") {
-		objects, err := AllObjs(bucket)
+		objects, err := AllObjs(bucket, c)
 		if err != nil {
 			return nil, err
 		}
@@ -125,41 +125,103 @@ func getAllObjs(c *cli.Context, bucket *oss.Bucket) ([]oss.ObjectProperties, err
 	return res.Objects, nil
 }
 
-func AllObjs(bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
-	var objects []oss.ObjectProperties
+func AllObjs(bucket *oss.Bucket, c *cli.Context) ([]oss.ObjectProperties, error) {
+	// -n --all
+	return NumObjs(bucket, c)
+}
 
-	marker := oss.Marker("")
+func NumObjs(bucket *oss.Bucket, c *cli.Context) ([]oss.ObjectProperties, error) {
 
+	var (
+		objList oss.ListObjectsResult
+		objs    []oss.ObjectProperties
+		err     error
+		marker  = oss.Marker("")
+		part    = 1000
+	)
+
+	// 指定了-n参数，或者没有指定--all参数时
+	if c.IsSet("n") || !c.IsSet("all") {
+		if c.Int("n") <= 1000 {
+			objs, err := bucket.ListObjects(
+				oss.MaxKeys(c.Int("c")),
+				oss.Prefix(c.String("prefix")),
+			)
+
+			return objs.Objects, err
+		}
+
+		num := c.Int("n")
+		num -= part
+
+		for {
+			if objList, err = numObjs(bucket, c, marker, part); err != nil {
+				return nil, err
+			}
+
+			objs = append(objs, objList.Objects...)
+			marker = oss.Marker(objList.NextMarker)
+
+			if num == 0 {
+				return objs, nil
+			}
+
+			if num <= part {
+				part = num
+				num = 0
+			}
+
+			if num > part {
+				num -= part
+			}
+		}
+
+	}
+
+	// 指定--all参数时
 	for {
 
-		objs, err := bucket.ListObjects(marker, oss.MaxKeys(1000))
+		objList, err = bucket.ListObjects(
+			marker,
+			oss.MaxKeys(1000),
+			oss.Prefix(c.String("prefix")),
+		)
 
 		if err != nil {
 			return nil, err
 		}
 
-		marker = oss.Marker(objs.NextMarker)
-		objects = append(objects, objs.Objects...)
+		marker = oss.Marker(objList.NextMarker)
+		objs = append(objs, objList.Objects...)
 
-		if !objs.IsTruncated {
+		if !objList.IsTruncated {
 			break
 		}
 	}
 
-	return objects, nil
+	return objs, nil
+}
+
+// 获取1000个以下对象时使用该函数
+func numObjs(bucket *oss.Bucket, c *cli.Context, marker oss.Option, num int) (oss.ListObjectsResult, error) {
+	return bucket.ListObjects(
+		marker,
+		oss.Prefix(c.String("prefix")),
+		oss.MaxKeys(num),
+	)
 }
 
 func printObjects(c *cli.Context, objects []oss.ObjectProperties) {
 
 	if !c.Bool("q") {
-		fmt.Println(color.New(color.FgHiCyan).Sprint("    size  object"))
+		fmt.Println(color.New(color.FgHiCyan).Sprint("    index   size  object"))
 
-		for _, obj := range objects {
+		for index, obj := range objects {
 			fmt.Printf(
 				"%s  %s\n",
 				color.New(color.FgHiBlack).SprintfFunc()(
 					"%s",
-					fmt.Sprintf("%8s", "["+display.SmartSize(obj.Size)+"]"),
+					fmt.Sprintf("%8d%8s", index, "["+display.SmartSize(obj.Size)+"]"),
 				),
 				obj.Key,
 			)
