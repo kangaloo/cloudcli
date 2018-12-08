@@ -64,9 +64,7 @@ func ListObjects(c *cli.Context) error {
 	// 冲突参数检查
 	// 特殊参数检查
 	// finished -b -q
-	//  -n --prefix --suffix --all
-	// --presuffix
-	// 键的最大长度 --max-length
+	//  -n --prefix  --all
 
 	var (
 		client  *oss.Client
