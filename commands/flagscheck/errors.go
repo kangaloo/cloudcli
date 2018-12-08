@@ -63,6 +63,25 @@ type notDefinedFlagErr struct {
 	flag string
 }
 
-func (e notDefinedFlagErr) Error() string {
+func (e *notDefinedFlagErr) Error() string {
 	return fmt.Sprintf("flag '%s' is flag checklist not defined", display.PrettyFlag(e.flag))
+}
+
+func NewAtLeastOneErr(flags []string) error {
+	return &mustProvideOneErr{
+		flags: flags,
+	}
+}
+
+type mustProvideOneErr struct {
+	flags []string
+}
+
+func (e *mustProvideOneErr) Error() string {
+	var flags []string
+	for _, flag := range e.flags {
+		flags = append(flags, display.PrettyFlag(flag))
+	}
+
+	return fmt.Sprintf("at least one flag %s must be provided", strings.Join(flags, ", "))
 }

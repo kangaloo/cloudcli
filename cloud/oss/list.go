@@ -75,7 +75,6 @@ func ListObjects(c *cli.Context) error {
 
 	conflict := [][]string{
 		{"n", "all"},
-		{"prefix", "suffix"},
 	}
 
 	necessary := []string{"b"}
@@ -142,6 +141,10 @@ func NumObjs(bucket *oss.Bucket, c *cli.Context) ([]oss.ObjectProperties, error)
 			objs = append(objs, objList.Objects...)
 			marker = oss.Marker(objList.NextMarker)
 
+			if !objList.IsTruncated {
+				return objs, nil
+			}
+
 			if num == 0 {
 				return objs, nil
 			}
@@ -155,7 +158,6 @@ func NumObjs(bucket *oss.Bucket, c *cli.Context) ([]oss.ObjectProperties, error)
 				num -= part
 			}
 		}
-
 	}
 
 	// 指定--all参数时

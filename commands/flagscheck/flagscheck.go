@@ -24,6 +24,23 @@ func AtMostOneCheck(c *cli.Context, lists [][]string) error {
 	return nil
 }
 
+func AtLeastOneCheck(c *cli.Context, lists [][]string) error {
+	for _, list := range lists {
+		var provided []string
+
+		for _, flag := range list {
+			if c.IsSet(flag) {
+				provided = append(provided, flag)
+			}
+		}
+
+		if len(provided) == 0 {
+			return NewAtLeastOneErr(list)
+		}
+	}
+	return nil
+}
+
 // 必须二选一的参数
 func EitherOrCheck(c *cli.Context, pairs [][]string) error {
 	for _, pair := range pairs {
@@ -61,8 +78,7 @@ func MustOnlyOneCheck(c *cli.Context, lists [][]string) error {
 		}
 
 		if len(provided) == 0 {
-			// TODO 定义新的错误类型
-			return NewConflictFlagErr(provided)
+			return NewAtLeastOneErr(list)
 		}
 
 		if len(provided) > 1 {

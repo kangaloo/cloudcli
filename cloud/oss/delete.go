@@ -47,6 +47,8 @@ func DelBucket(c *cli.Context) error {
 // delete 可以完全复用 list 的 flag，删除list的结果即可
 // --prefix
 func DelObject(c *cli.Context) error {
+	// -b -o -n --prefix --all
+	// --del 真的删除，不指定该参数时，只打印将要删除的对象
 
 	var (
 		client *oss.Client
@@ -55,14 +57,31 @@ func DelObject(c *cli.Context) error {
 	)
 
 	necessary := []string{"b"}
-	eitherOr := [][]string{{"o", "all"}}
+	atMostOne := [][]string{
+		{"o", "n", "all"},
+	}
+	conflict := [][]string{
+		{"o", "prefix"},
+	}
+	atLeastOne := [][]string{
+		{"n", "all", "prefix", "o"},
+	}
+
 	//optional  := []string{"all"}
 
 	if err = flagscheck.NecessaryCheck(c, necessary...); err != nil {
 		return err
 	}
 
-	if err = flagscheck.EitherOrCheck(c, eitherOr); err != nil {
+	if err = flagscheck.AtMostOneCheck(c, atMostOne); err != nil {
+		return err
+	}
+
+	if err = flagscheck.AtLeastOneCheck(c, atLeastOne); err != nil {
+		return err
+	}
+
+	if err = flagscheck.ConflictCheck(c, conflict); err != nil {
 		return err
 	}
 
@@ -132,6 +151,12 @@ func deleteAll(bucket *oss.Bucket, c *cli.Context) error {
 		return err
 	}
 
+	if !c.IsSet("del") {
+		fmt.Printf("\n%s delete the listed objects with flag '--del'\n\n", display.HiBlack("message:"))
+		printObjects(c, objects)
+		return nil
+	}
+
 	for _, obj := range objects {
 		err := deleteOne(bucket, obj.Key)
 		if err != nil {
@@ -139,13 +164,5 @@ func deleteAll(bucket *oss.Bucket, c *cli.Context) error {
 		}
 	}
 
-	return nil
-}
-
-func deleteByPrefix(bucket *oss.Bucket, prefix string) error {
-	return nil
-}
-
-func deleteBySuffix(bucket *oss.Bucket, suffix string) error {
 	return nil
 }
