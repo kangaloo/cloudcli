@@ -96,33 +96,13 @@ func ListObjects(c *cli.Context) error {
 		return err
 	}
 
-	if objects, err = getAllObjs(c, bucket); err != nil {
+	if objects, err = AllObjs(bucket, c); err != nil {
 		return err
 	}
 
 	printObjects(c, objects)
 
 	return nil
-}
-
-func getAllObjs(c *cli.Context, bucket *oss.Bucket) ([]oss.ObjectProperties, error) {
-
-	if c.Bool("all") {
-		objects, err := AllObjs(bucket, c)
-		if err != nil {
-			return nil, err
-		}
-
-		return objects, nil
-	}
-
-	res, err := bucket.ListObjects(oss.MaxKeys(c.Int("n")))
-
-	if err != nil {
-		return nil, err
-	}
-
-	return res.Objects, nil
 }
 
 func AllObjs(bucket *oss.Bucket, c *cli.Context) ([]oss.ObjectProperties, error) {
@@ -144,8 +124,8 @@ func NumObjs(bucket *oss.Bucket, c *cli.Context) ([]oss.ObjectProperties, error)
 	if c.IsSet("n") || !c.IsSet("all") {
 		if c.Int("n") <= 1000 {
 			objs, err := bucket.ListObjects(
-				oss.MaxKeys(c.Int("c")),
 				oss.Prefix(c.String("prefix")),
+				oss.MaxKeys(c.Int("n")),
 			)
 
 			return objs.Objects, err
