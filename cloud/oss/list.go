@@ -12,31 +12,12 @@ import (
 // List print a buckets list
 func ListBucket(c *cli.Context) error {
 
-	//necessary := []string{"b"}
-	//conflicts := [][]string{}
-
-	// 检查上面两个切片中的参数是否都是定义过的
-	// DefinedCheck
-
-	/*
-		// 必要参数检查
-		if err := cloud.NecessaryCheck(c, necessary...); err != nil {
-			if err := cli.ShowSubcommandHelp(c); err != nil {
-				return err
-			}
-
-			return err
-		}
-	*/
-
 	client, err := NewOssClient(c.App.Metadata["config"])
-
 	if err != nil {
 		return err
 	}
 
 	list, err := client.ListBuckets()
-
 	if err != nil {
 		return err
 	}
@@ -44,16 +25,6 @@ func ListBucket(c *cli.Context) error {
 	for _, bucket := range list.Buckets {
 		fmt.Println(bucket.Name)
 	}
-
-	/*
-		// 冲突参数检查
-		if err := cloud.ConflictCheck(c, conflicts); err != nil {
-			return err
-		}
-	*/
-
-	// 检查当前子命令需要的特殊参数是否满足 没有必要的
-	// return specialFlagErr
 
 	return nil
 }

@@ -36,15 +36,24 @@ var ossUploadFlags = []cli.Flag{
 	},
 	cli.IntFlag{
 		Name:  "p",
-		Usage: "prat size `number`",
+		Usage: "part size `number`",
 		Value: 1024 * 100,
 	},
 	cli.BoolFlag{
-		Name:  "o",
-		Usage: "specify the `object` name when upload a single file",
+		Name: "o",
+		Usage: "specify the `object` name when upload a single file; " +
+			"if not specified, same as the file name",
+	},
+	cli.StringFlag{
+		Name:  "f",
+		Usage: "upload the specified `file`",
+	},
+	cli.StringFlag{
+		Name:  "prefix",
+		Usage: "objects `prefix`",
 	},
 	cli.BoolFlag{
-		Name:  "r",
+		Name:  "R",
 		Usage: "upload directories recursively",
 	},
 	cli.BoolFlag{
@@ -57,23 +66,7 @@ var ossListBucket = &cli.Command{
 	Name:      "list_bucket",
 	ShortName: "lsbk",
 	Usage:     "list all objects in a bucket",
-	Flags:     ossListBkFlags,
 	Action:    oss.ListBucket,
-}
-
-var ossListBkFlags = []cli.Flag{
-	cli.StringFlag{
-		Name:  "b",
-		Usage: "`bucket` name",
-	},
-	cli.BoolFlag{
-		Name:  "s",
-		Usage: "show size",
-	},
-	cli.IntFlag{
-		Name:  "n",
-		Usage: "number of objects",
-	},
 }
 
 var ossList = &cli.Command{

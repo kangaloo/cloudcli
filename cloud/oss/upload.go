@@ -1,13 +1,23 @@
 package oss
 
 import (
-	"fmt"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/urfave/cli"
 )
 
 // --prefix
 func Upload(c *cli.Context) error {
-	fmt.Printf("%+v\n", c.App.Metadata["config"])
+	// 参数检查
+
+	var (
+		client *oss.Client
+		bucket *oss.Bucket
+		err    error
+	)
+
+	if client, err = NewOssClient(c.App.Metadata["config"]); err != nil {
+		return err
+	}
 
 	return nil
 }
