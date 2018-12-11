@@ -39,7 +39,7 @@ var ossUploadFlags = []cli.Flag{
 		Usage: "part size `number`",
 		Value: 1024 * 100,
 	},
-	cli.BoolFlag{
+	cli.StringFlag{
 		Name: "o",
 		Usage: "specify the `object` name when upload a single file; " +
 			"if not specified, same as the file name",
@@ -52,9 +52,13 @@ var ossUploadFlags = []cli.Flag{
 		Name:  "prefix",
 		Usage: "objects `prefix`",
 	},
+	cli.StringFlag{
+		Name:  "r",
+		Usage: "upload directories and files in specified directory",
+	},
 	cli.BoolFlag{
 		Name:  "R",
-		Usage: "upload directories recursively",
+		Usage: "upload directories and files in current work directory",
 	},
 	cli.BoolFlag{
 		Name:  "overwrite",

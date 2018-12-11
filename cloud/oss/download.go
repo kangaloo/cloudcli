@@ -22,7 +22,7 @@ func Download(c *cli.Context) error {
 	// TODO 注意检查 f 是否为已经存在的文件，提供覆盖选项
 
 	if !c.IsSet("overwrite") {
-		if file.FileExist(c.String("f")) {
+		if file.IsFileExist(c.String("f")) {
 			return errors.New(fmt.Sprintf("file %s already exist", c.String("f")))
 		}
 	}
