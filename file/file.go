@@ -34,8 +34,17 @@ func DefaultConfDir() string {
 	return c
 }
 
-// prefix 是递归用的，调用的时候必须传入空字符串 ""
-func CollectFiles(files *[]string, root, prefix string) error {
+func CollectFiles(files *[]string, root string) error {
+	return collectFiles(files, root, "")
+}
+
+// 调用时，root和prefix使用相同的值，则可以得到文件的绝对路径，但是prefix 不能以/结尾，需要处理
+// root = / 时需要特殊处理
+// todo change cwd wd 必须提供一个相对路径出来，方便将文件名作为对象名，但是又需要能够读取文件
+//  set ENV? reset ENV?
+
+// prefix 参数传入空字符串时，获取相对路径
+func collectFiles(files *[]string, root, prefix string) error {
 
 	fis, err := ioutil.ReadDir(root)
 	if err != nil {
@@ -46,7 +55,7 @@ func CollectFiles(files *[]string, root, prefix string) error {
 		file := ""
 
 		if len(prefix) > 0 {
-			file = fmt.Sprintf("%s%s%s", root, string(os.PathSeparator), v.Name())
+			file = fmt.Sprintf("%s%s%s", prefix, string(os.PathSeparator), v.Name())
 		} else {
 			file = v.Name()
 		}
@@ -54,9 +63,9 @@ func CollectFiles(files *[]string, root, prefix string) error {
 		if !v.IsDir() {
 			*files = append(*files, file)
 		} else {
-			err := CollectFiles(files, file, file)
+			err := collectFiles(files, file, file)
 			if err != nil {
-				return nil
+				return err
 			}
 		}
 	}
