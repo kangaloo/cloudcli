@@ -3,6 +3,7 @@ package oss
 import (
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"github.com/kangaloo/cloudcli/commands/flagscheck"
 	"github.com/kangaloo/cloudcli/display"
 	"github.com/kangaloo/cloudcli/file"
 	"github.com/urfave/cli"
@@ -13,15 +14,28 @@ import (
 
 // --prefix
 func Upload(c *cli.Context) error {
-	// 参数检查
-	// 上传单个文件时是否支持 --prefix 参数
-	// -r -o 参数不能为空字符串
-	// -R / -r 不能同时出现
-	// -b 必须参数
-	// 与 -f 配合的可选参数 空 -o --prefix
-	// 与 -R/-r 配合的可选参数 空 --prefix
-	// 使用 -r 时，如果文件路径以 / 开始，需要去掉开头的 / 作为对象名
-	// 如果文件名以 ./ 开头，需要去掉 ./
+
+	// check flags
+	{
+		var (
+			necessary  = []string{"b"}
+			conflict   = [][]string{{"R", "r"}, {"o", "prefix"}}
+			atLeastOne = [][]string{{"r", "R", "f"}}
+			err        error
+		)
+
+		if err = flagscheck.NecessaryCheck(c, necessary...); err != nil {
+			return err
+		}
+
+		if err = flagscheck.ConflictCheck(c, conflict); err != nil {
+			return err
+		}
+
+		if err = flagscheck.AtLeastOneCheck(c, atLeastOne); err != nil {
+			return err
+		}
+	}
 
 	var (
 		client *oss.Client
@@ -48,8 +62,6 @@ func Upload(c *cli.Context) error {
 }
 
 func upload(bucket *oss.Bucket, c *cli.Context) error {
-	// todo 分层，分成参数处理层和底层api调用层，底层函数直接接受各种参数
-	// 该函数负责解析参数
 
 	var (
 		root       string
@@ -134,9 +146,6 @@ func uploadOneFile(bucket *oss.Bucket, file, object string, overwrite bool) erro
 // 需要上传当前目录的内容时，root参数传空字符串
 // 不需要prefix参数时，传空字符串
 func uploadRecursively(bucket *oss.Bucket, root, prefix string, overwrite bool) error {
-	// 注意 files 里的元素可能以 / 或者 ./ 开头，需要特殊处理 需要去掉其前缀
-	// removePrefix()
-	// removeSuffix()
 
 	var (
 		files []string
