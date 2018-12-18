@@ -3,7 +3,6 @@ package oss
 import (
 	"fmt"
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/fatih/color"
 	"github.com/kangaloo/cloudcli/commands/flagscheck"
 	"github.com/kangaloo/cloudcli/config"
 	"github.com/kangaloo/cloudcli/display"
@@ -66,10 +65,10 @@ func (listener *ossProgressListener) ProgressChanged(event *oss.ProgressEvent) {
 			event.ConsumedBytes, event.TotalBytes, display.HiBlack(display.SmartSize(event.TotalBytes)))
 	case oss.TransferDataEvent:
 		fmt.Printf(
-			"\rTransfer Data, ConsumedBytes: %s, TotalBytes %s, %d%%.",
-			color.New(color.FgGreen).SprintfFunc()("%d", event.ConsumedBytes),
-			color.New(color.FgGreen).SprintfFunc()("%d", event.TotalBytes),
-			event.ConsumedBytes*100/event.TotalBytes,
+			"\rTransfer Data, ConsumedBytes: %s, TotalBytes %s, %s%%.",
+			display.HiBlack("%d", event.ConsumedBytes),
+			display.HiBlack("%d", event.TotalBytes),
+			display.HiBlack("%d", event.ConsumedBytes*100/event.TotalBytes),
 		)
 	case oss.TransferCompletedEvent:
 		fmt.Printf("\nTransfer Completed, ConsumedBytes: %d, TotalBytes %d.\n",
