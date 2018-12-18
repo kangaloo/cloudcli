@@ -16,6 +16,7 @@ import (
 func Upload(c *cli.Context) error {
 
 	// check flags
+	// todo 非空字符串检查
 	{
 		var (
 			necessary  = []string{"b"}
@@ -77,11 +78,17 @@ func upload(bucket *oss.Bucket, c *cli.Context) error {
 	overwrite = c.Bool("overwrite")
 
 	// 上传单个文件
-	// 此处可根据是否提供了-o参数判断
-	if !(c.Bool("R") || c.IsSet("r")) {
-
+	if c.IsSet("f") {
 		singleFile = c.String("f")
-		object := addPrefix(singleFile, prefix)
+		object := singleFile
+
+		if c.IsSet("prefix") {
+			object = addPrefix(singleFile, prefix)
+		}
+
+		if c.IsSet("o") {
+			object = c.String("o")
+		}
 
 		if err = uploadOneFile(bucket, singleFile, object, overwrite); err != nil {
 			return err
@@ -91,8 +98,6 @@ func upload(bucket *oss.Bucket, c *cli.Context) error {
 	}
 
 	// 上传目录，两种情况 -R / -r
-	// -R path = "."
-	// -r path = specified_path
 	if c.Bool("R") {
 		if err = uploadRecursively(bucket, "", prefix, overwrite); err != nil {
 			return err
