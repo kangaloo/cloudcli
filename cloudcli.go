@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/fatih/color"
 	"github.com/kangaloo/cloudcli/commands"
 	"github.com/kangaloo/cloudcli/commands/oss"
 	"github.com/kangaloo/cloudcli/config"
+	"github.com/kangaloo/cloudcli/display"
 	"github.com/urfave/cli"
 	"os"
 )
@@ -36,7 +36,7 @@ func main() {
 	err := app.Run(os.Args)
 
 	if err != nil {
-		fmt.Println(color.New(color.FgRed).SprintfFunc()("ERROR: %s", err))
+		fmt.Println(display.Red("ERROR: %s", err))
 		os.Exit(1)
 	}
 }
