@@ -65,10 +65,10 @@ func (listener *ossProgressListener) ProgressChanged(event *oss.ProgressEvent) {
 			event.ConsumedBytes, event.TotalBytes, display.HiBlack(display.SmartSize(event.TotalBytes)))
 	case oss.TransferDataEvent:
 		fmt.Printf(
-			"\rTransfer Data, ConsumedBytes: %s, TotalBytes %s, %s%%.",
+			"\rTransfer Data, ConsumedBytes: %s, TotalBytes %s, %s.",
 			display.HiBlack("%d", event.ConsumedBytes),
 			display.HiBlack("%d", event.TotalBytes),
-			display.HiBlack("%d", event.ConsumedBytes*100/event.TotalBytes),
+			display.HiBlack("%d%%", event.ConsumedBytes*100/event.TotalBytes),
 		)
 	case oss.TransferCompletedEvent:
 		fmt.Printf("\nTransfer Completed, ConsumedBytes: %d, TotalBytes %d.\n",
