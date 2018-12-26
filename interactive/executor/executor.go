@@ -111,7 +111,7 @@ func internalExecutor(s string) {
 }
 
 func appExecutor(s string) {
-	cmd := exec.Command("/bin/bash", "-c", os.Args[0], s)
+	cmd := exec.Command("/bin/bash", "-c", os.Args[0]+" "+s)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
