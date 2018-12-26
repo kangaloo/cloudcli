@@ -51,6 +51,7 @@ func Executor(s string) {
 	}
 
 	// execute application command
+	fmt.Println(s)
 	appExecutor(s)
 
 	/*
