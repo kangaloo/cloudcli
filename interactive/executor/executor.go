@@ -51,7 +51,6 @@ func Executor(s string) {
 	}
 
 	// execute application command
-	fmt.Println(s)
 	appExecutor(s)
 
 	/*
@@ -116,6 +115,8 @@ func appExecutor(s string) {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+
+	fmt.Printf("%+v", cmd)
 
 	if err := cmd.Run(); err != nil {
 		fmt.Printf("Got error: %s\n", err.Error())
