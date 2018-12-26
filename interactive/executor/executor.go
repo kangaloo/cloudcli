@@ -111,6 +111,12 @@ func internalExecutor(s string) {
 }
 
 func appExecutor(s string) {
+
+	// todo os.Args[0] 是 ./cloudcli 是相对路径的，如果执行了!cd 则后续命令无法正常执行
+	//  在上传相对路径的时候，还有一个 os.ChDir的动作
+	//  进入交互模式后，当前目录变成了一个很重要的环境变量，需要注意，更改之后应该在改回来
+	//  不改回来是否有其他影响，如读取配置文件，重新读取配置文件，
+	//  配置文件的读取是相对路径还是绝对路径，相对文件还是相对执行路径的
 	cmd := exec.Command("/bin/bash", "-c", os.Args[0]+" "+s)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
