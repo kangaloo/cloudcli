@@ -62,7 +62,9 @@ func (listener *ossProgressListener) ProgressChanged(event *oss.ProgressEvent) {
 	switch event.EventType {
 	case oss.TransferStartedEvent:
 		fmt.Printf("Transfer Started, ConsumedBytes: %d, TotalBytes %d (%s)\n",
-			event.ConsumedBytes, event.TotalBytes, display.HiBlack(display.SmartSize(event.TotalBytes)))
+			event.ConsumedBytes, event.TotalBytes,
+			display.HiBlack(display.SmartSize(event.TotalBytes)),
+		)
 	case oss.TransferDataEvent:
 		fmt.Printf(
 			"\rTransfer Data, ConsumedBytes: %s, TotalBytes %s, %s.",

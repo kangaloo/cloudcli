@@ -11,6 +11,9 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/mattn/go-colorable v0.0.9 // indirect
 	github.com/mattn/go-isatty v0.0.4 // indirect
+	github.com/mattn/go-runewidth v0.0.4 // indirect
+	github.com/mattn/go-tty v0.0.0-20181127064339-e4f871175a2f // indirect
+	github.com/pkg/term v0.0.0-20181116001808-27bbf2edb814 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/stretchr/testify v1.2.2 // indirect

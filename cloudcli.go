@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/kangaloo/cloudcli/commands"
+	"github.com/kangaloo/cloudcli/commands/interactivemode"
 	"github.com/kangaloo/cloudcli/commands/oss"
 	"github.com/kangaloo/cloudcli/config"
 	"github.com/kangaloo/cloudcli/display"
@@ -32,6 +33,7 @@ func main() {
 	commands.AddCmd(app, oss.Oss)
 	//commands.AddCmd(app, ecs.Ecs)
 	//commands.AddCmd(app, slb.Slb)
+	commands.AddCmd(app, interactivemode.Interactive)
 
 	err := app.Run(os.Args)
 
