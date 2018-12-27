@@ -117,6 +117,9 @@ func appExecutor(s string) {
 	//  进入交互模式后，当前目录变成了一个很重要的环境变量，需要注意，更改之后应该在改回来
 	//  不改回来是否有其他影响，如读取配置文件，重新读取配置文件，
 	//  配置文件的读取是相对路径还是绝对路径，相对文件还是相对执行路径的
+
+	// todo 获取set命令设置的env，加入到全局参数里
+
 	cmd := exec.Command("/bin/bash", "-c", os.Args[0]+" "+s)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

@@ -39,7 +39,6 @@ func Run(c *cli.Context) error {
 	p.Run()
 
 	return nil
-
 }
 
 // todo 在prefix里拼接换行符后，每一次键盘输入，都会换一次行

@@ -54,7 +54,7 @@ var ossUploadFlags = []cli.Flag{
 	},
 	cli.StringFlag{
 		Name:  "r",
-		Usage: "upload directories and files in specified directory",
+		Usage: "upload directories and files in specified `directory`",
 	},
 	cli.BoolFlag{
 		Name:  "R",
