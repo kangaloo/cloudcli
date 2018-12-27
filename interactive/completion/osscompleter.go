@@ -58,3 +58,7 @@ func ossUploadCompleter(args []string, d prompt.Document) []prompt.Suggest {
 		true,
 	)
 }
+
+func ossDelCompleter(args []string) []prompt.Suggest {
+	return nil
+}
