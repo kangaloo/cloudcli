@@ -87,7 +87,22 @@ func appCompleter(args []string) []prompt.Suggest {
 }
 
 func ossSubCommandCompleter(args []string) []prompt.Suggest {
-	return prompt.FilterHasPrefix(OssSubCommands, args[1], true)
+	if len(args) == 2 {
+		return prompt.FilterHasPrefix(OssSubCommands, args[1], true)
+	}
+
+	switch args[1] {
+	case "upload", "ul":
+	case "download", "dl":
+	case "list", "ls":
+		return ossListCompleter(args)
+	case "list_bucket", "lsbk":
+	case "create", "ct":
+	case "delete", "del":
+	case "delete_bucket", "delbk":
+	}
+
+	return nil
 }
 
 // sysCompleter return system commands and internal commands
