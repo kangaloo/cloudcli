@@ -37,7 +37,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 			return sysCompleter(args, d)
 		}
 
-		return appCompleter(args)
+		return appCompleter(args, d)
 	}
 
 	// 第二级命令 e.g. upload download
@@ -47,11 +47,11 @@ func Completer(d prompt.Document) []prompt.Suggest {
 			return sysCompleter(args, d)
 		}
 
-		return appCompleter(args)
+		return appCompleter(args, d)
 	}
 
 	if len(args) > 2 {
-		return appCompleter(args)
+		return appCompleter(args, d)
 	}
 
 	// 第一级
@@ -64,7 +64,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	return nil
 }
 
-func appCompleter(args []string) []prompt.Suggest {
+func appCompleter(args []string, d prompt.Document) []prompt.Suggest {
 
 	if len(args) == 1 {
 		return subCommandCompleter(args)
@@ -73,7 +73,7 @@ func appCompleter(args []string) []prompt.Suggest {
 	if len(args) >= 2 {
 		switch args[0] {
 		case "oss":
-			return ossSubCommandCompleter(args)
+			return ossSubCommandCompleter(args, d)
 		case "help":
 			return nil
 		case "interactive":
@@ -86,13 +86,14 @@ func appCompleter(args []string) []prompt.Suggest {
 	return nil
 }
 
-func ossSubCommandCompleter(args []string) []prompt.Suggest {
+func ossSubCommandCompleter(args []string, d prompt.Document) []prompt.Suggest {
 	if len(args) == 2 {
 		return prompt.FilterHasPrefix(OssSubCommands, args[1], true)
 	}
 
 	switch args[1] {
 	case "upload", "ul":
+		return ossUploadCompleter(args, d)
 	case "download", "dl":
 	case "list", "ls":
 		return ossListCompleter(args)
