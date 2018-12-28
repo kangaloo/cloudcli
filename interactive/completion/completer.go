@@ -95,12 +95,17 @@ func ossSubCommandCompleter(args []string, d prompt.Document) []prompt.Suggest {
 	case "upload", "ul":
 		return ossUploadCompleter(args, d)
 	case "download", "dl":
+		return ossDownloadCompleter(args, d)
 	case "list", "ls":
 		return ossListCompleter(args)
 	case "list_bucket", "lsbk":
+		return nil
 	case "create", "ct":
+		return ossCreateCompleter(args)
 	case "delete", "del":
+		return ossDelCompleter(args)
 	case "delete_bucket", "delbk":
+		return ossCreateCompleter(args)
 	}
 
 	return nil
