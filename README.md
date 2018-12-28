@@ -5,8 +5,6 @@ go build cloudcli.go
 
 # run a command
 
-![](Jietu20181228-180859-HD.gif)
-
 ```
 ./cloudcli -h
 NAME:
