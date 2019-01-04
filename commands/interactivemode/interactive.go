@@ -6,7 +6,8 @@ import (
 )
 
 var Interactive = &cli.Command{
-	Name:   "interactive",
-	Usage:  "interactive mode",
-	Action: interactive.Run,
+	Name:      "interactive",
+	ShortName: "inter",
+	Usage:     "interactive mode",
+	Action:    interactive.Run,
 }
