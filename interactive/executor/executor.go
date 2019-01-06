@@ -10,7 +10,11 @@ import (
 )
 
 // prompt prefix number
-var Times = 0
+var (
+	Times  = 0
+	Binary string
+	env    = make(map[string]string)
+)
 
 // todo 合法命令过滤器
 // todo 检查是否是支持的系统命令，防止执行不支持的系统命令
@@ -53,14 +57,6 @@ func Executor(s string) {
 	// execute application command
 	appExecutor(s)
 
-	/*
-		args := strings.Split("oss "+s, " ")
-
-		if err := command.App.Run(args); err != nil {
-			fmt.Printf("Got error: %s\n", err.Error())
-		}
-	*/
-
 	// todo exec(bash -c os.Args[0])
 	//  交互命令和底层可执行文件为同一个文件，不加参数时进入交互模式，在交互模式中带着参数调用其本身，返回结果
 	//  这样做的好处，可以在管道后面直接执行一些shell命令
@@ -94,6 +90,13 @@ func shellExecutor(s string) {
 }
 
 func internalExecutor(s string) {
+
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println(err)
+		}
+	}()
+
 	if strings.HasPrefix(s, "!cd") {
 		s = strings.Split(s, " ")[1]
 		if err := os.Chdir(s); err != nil {
@@ -107,12 +110,11 @@ func internalExecutor(s string) {
 		// todo create the set command
 		return
 	}
-
 }
 
 func appExecutor(s string) {
 
-	// todo os.Args[0] 是 ./cloudcli 是相对路径的，如果执行了!cd 则后续命令无法正常执行
+	// todo
 	//  在上传相对路径的时候，还有一个 os.ChDir的动作
 	//  进入交互模式后，当前目录变成了一个很重要的环境变量，需要注意，更改之后应该在改回来
 	//  不改回来是否有其他影响，如读取配置文件，重新读取配置文件，
@@ -120,7 +122,7 @@ func appExecutor(s string) {
 
 	// todo 获取set命令设置的env，加入到全局参数里
 
-	cmd := exec.Command("/bin/bash", "-c", os.Args[0]+" "+s)
+	cmd := exec.Command("/bin/bash", "-c", Binary+" "+s)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

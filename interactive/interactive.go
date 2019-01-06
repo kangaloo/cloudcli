@@ -9,11 +9,22 @@ import (
 	"github.com/urfave/cli"
 	"os"
 	"os/user"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
 
 func Run(c *cli.Context) error {
+
+	var (
+		binary string
+		err    error
+	)
+	if binary, err = getBinary(); err != nil {
+		return err
+	}
+
+	executor.Binary = binary
 
 	fmt.Printf("osscli %s\n", c.App.Version)
 	fmt.Println("Please use `!` to execute system command \nand use `exit` or `Ctrl-D` to exit this program.")
@@ -60,4 +71,20 @@ func livePrefix() (prefix string, useLivePrefix bool) {
 
 	prefix = strings.Replace(prefix, u.HomeDir, "~", -1)
 	return
+}
+
+func getBinary() (string, error) {
+
+	l := strings.Split(os.Args[0], string(os.PathSeparator))
+	bin := l[len(l)-1]
+
+	root, err := filepath.Abs(filepath.Dir(os.Args[0]))
+
+	if err != nil {
+		return "", err
+	}
+
+	bin = fmt.Sprintf("%s%s%s", root, string(os.PathSeparator), bin)
+
+	return bin, nil
 }
