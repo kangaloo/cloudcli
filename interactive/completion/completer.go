@@ -157,5 +157,5 @@ func fileSystemCompleter(d prompt.Document) []prompt.Suggest {
 }
 
 func setCompleter(args []string) []prompt.Suggest {
-	return nil
+	return prompt.FilterHasPrefix(EnvSuggests, args[len(args)-1], true)
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/c-bata/go-prompt"
 	"github.com/c-bata/go-prompt/completer"
 	"github.com/kangaloo/cloudcli/interactive/completion"
+	"github.com/kangaloo/cloudcli/interactive/environment"
 	"github.com/kangaloo/cloudcli/interactive/executor"
 	"github.com/urfave/cli"
 	"os"
@@ -25,6 +26,12 @@ func Run(c *cli.Context) error {
 	}
 
 	executor.Binary = binary
+	executor.Envs = environment.NewEnvs("endpoint", "accessKey", "accessKeySecret")
+	completion.EnvSuggests = []prompt.Suggest{
+		{Text: "endpoint=", Description: "AliYun OSS endpoint"},
+		{Text: "accessKey=", Description: "AliYun OSS accessKey"},
+		{Text: "accessKeySecret=", Description: "AliYun OSS accessKeySecret"},
+	}
 
 	fmt.Printf("osscli %s\n", c.App.Version)
 	fmt.Println("Please use `!` to execute system command \nand use `exit` or `Ctrl-D` to exit this program.")

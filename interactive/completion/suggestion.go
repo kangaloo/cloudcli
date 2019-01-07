@@ -43,7 +43,10 @@ var SysCommands = []prompt.Suggest{
 var InternalCommands = []prompt.Suggest{
 	{Text: SysPrefix + "cd", Description: "change directory for local file system"},
 	{Text: SysPrefix + "set", Description: "set env"},
+	{Text: SysPrefix + "env", Description: "display env"},
 }
+
+var EnvSuggests []prompt.Suggest
 
 var SetSubCommands = []prompt.Suggest{
 	{Text: "accessKey", Description: ""},

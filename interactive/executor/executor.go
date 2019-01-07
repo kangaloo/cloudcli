@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"github.com/c-bata/go-prompt"
 	"github.com/kangaloo/cloudcli/interactive/completion"
+	"github.com/kangaloo/cloudcli/interactive/environment"
 	"os"
 	"os/exec"
 	"strings"
 )
 
-// prompt prefix number
 var (
+	// prompt prefix number
 	Times  = 0
 	Binary string
-	env    = make(map[string]string)
+	Envs   []environment.Env
 )
 
 // todo 合法命令过滤器
@@ -45,7 +46,7 @@ func Executor(s string) {
 
 		// 执行系统命令
 		if supportedCMDCheck(s, completion.SysCommands) {
-			sysExecutor(s)
+			shellExecutor(s)
 			return
 		}
 
@@ -63,18 +64,6 @@ func Executor(s string) {
 	//  扩展，直接执行shell命令的可行性 设置shell命令白名单，白名单内的执行直接解析成shell命令执行
 
 	return
-}
-
-// sysExecutor execute the system commands
-// if s is a internal command invoke internalExecutor()
-// else invoke shellExecutor
-func sysExecutor(s string) {
-	if strings.HasPrefix(s, "!cd ") {
-		internalExecutor(s)
-		return
-	}
-
-	shellExecutor(s)
 }
 
 func shellExecutor(s string) {
@@ -107,7 +96,14 @@ func internalExecutor(s string) {
 
 	if strings.HasPrefix(s, "!set") {
 		s = strings.Split(s, " ")[1]
-		// todo create the set command
+		setEnv(s)
+		return
+	}
+
+	if strings.HasPrefix(s, "!env") {
+		for _, env := range Envs {
+			env.Display()
+		}
 		return
 	}
 }
@@ -122,7 +118,11 @@ func appExecutor(s string) {
 
 	// todo 获取set命令设置的env，加入到全局参数里
 
-	cmd := exec.Command("/bin/bash", "-c", Binary+" "+s)
+	// todo 增加全局参数 ak aks endpoint
+
+	globalFlags := generateFlags(Envs)
+
+	cmd := exec.Command("/bin/bash", "-c", Binary+" "+globalFlags+" "+s)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -144,4 +144,30 @@ func supportedCMDCheck(s string, commands []prompt.Suggest) bool {
 	}
 
 	return false
+}
+
+// 生成全局命令行参数
+func generateFlags(envs []environment.Env) string {
+
+	var flags string
+
+	for _, env := range envs {
+
+		if env.Value == "" {
+			continue
+		}
+
+		flags = flags + env.Flag + " " + env.Value + " "
+	}
+
+	return flags
+}
+
+func setEnv(s string) {
+	t := strings.Split(s, "=")
+	for index, env := range Envs {
+		if env.Key == t[0] {
+			Envs[index].Value = t[1]
+		}
+	}
 }
