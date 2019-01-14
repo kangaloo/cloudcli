@@ -40,7 +40,7 @@ func ossUploadCompleter(args []string, d prompt.Document) []prompt.Suggest {
 		switch args[len(args)-2] {
 		case "-b":
 			// bucket completer
-			return nil
+			return prompt.FilterHasPrefix(cloud.BucketCompleter(), args[len(args)-1], true)
 		case "-o", "--prefix":
 			return nil
 		case "-f":
@@ -70,7 +70,7 @@ func ossDelCompleter(args []string) []prompt.Suggest {
 	if len(args) > 3 {
 		switch args[len(args)-2] {
 		case "-b":
-			return nil
+			return prompt.FilterHasPrefix(cloud.BucketCompleter(), args[len(args)-1], true)
 		case "-o":
 			return nil
 		case "-n":
@@ -97,6 +97,11 @@ func ossDelCompleter(args []string) []prompt.Suggest {
 func ossCreateCompleter(args []string) []prompt.Suggest {
 
 	if len(args) > 3 {
+		switch args[len(args)-2] {
+		case "-b":
+			return prompt.FilterHasPrefix(cloud.BucketCompleter(), args[len(args)-1], true)
+		}
+
 		return nil
 	}
 
@@ -111,7 +116,9 @@ func ossDownloadCompleter(args []string, d prompt.Document) []prompt.Suggest {
 
 	if len(args) > 3 {
 		switch args[len(args)-2] {
-		case "-b", "-o", "-p":
+		case "-b":
+			return prompt.FilterHasPrefix(cloud.BucketCompleter(), args[len(args)-1], true)
+		case "-o", "-p":
 			return nil
 		case "-f":
 			return fileSystemCompleter(d)
