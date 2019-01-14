@@ -19,6 +19,5 @@ var (
 func DefaultFile() string {
 	path := file.DefaultConfDir()
 	conf := fmt.Sprintf("%s%s%s", path, string(os.PathSeparator), defaultFile)
-
 	return conf
 }

@@ -3,6 +3,7 @@ package executor
 import (
 	"fmt"
 	"github.com/c-bata/go-prompt"
+	"github.com/kangaloo/cloudcli/interactive/cloud"
 	"github.com/kangaloo/cloudcli/interactive/completion"
 	"github.com/kangaloo/cloudcli/interactive/environment"
 	"os"
@@ -104,6 +105,8 @@ func internalExecutor(s string) {
 		for _, env := range Envs {
 			env.Display()
 		}
+
+		fmt.Printf("%+v\n", cloud.Config)
 		return
 	}
 }

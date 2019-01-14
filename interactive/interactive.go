@@ -8,6 +8,7 @@ import (
 	"github.com/kangaloo/cloudcli/interactive/environment"
 	"github.com/kangaloo/cloudcli/interactive/executor"
 	"github.com/urfave/cli"
+	"log"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -17,10 +18,13 @@ import (
 
 func Run(c *cli.Context) error {
 
+	log.SetOutput(os.Stderr)
+
 	var (
 		binary string
 		err    error
 	)
+
 	if binary, err = getBinary(); err != nil {
 		return err
 	}

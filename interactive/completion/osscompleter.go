@@ -2,6 +2,7 @@ package completion
 
 import (
 	"github.com/c-bata/go-prompt"
+	"github.com/kangaloo/cloudcli/interactive/cloud"
 )
 
 // todo 自动完成提示中排除已经输入过的参数
@@ -13,7 +14,7 @@ func ossListCompleter(args []string) []prompt.Suggest {
 		switch args[len(args)-2] {
 		case "-b":
 			// bucket completer
-			return nil
+			return prompt.FilterHasPrefix(cloud.BucketCompleter(), args[len(args)-1], true)
 		case "--prefix":
 			// prefix completer
 			return nil
