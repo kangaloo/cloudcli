@@ -138,7 +138,7 @@ func NecessaryCheck(c *cli.Context, flags ...string) error {
 func LengthCheck(params ...string) error {
 	for _, param := range params {
 		if param == "" {
-			return errors.New("parameter is empty string")
+			return errors.New("some necessary parameter is empty string")
 		}
 	}
 

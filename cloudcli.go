@@ -5,6 +5,7 @@ import (
 	"github.com/kangaloo/cloudcli/commands"
 	"github.com/kangaloo/cloudcli/commands/interactivemode"
 	"github.com/kangaloo/cloudcli/commands/oss"
+	"github.com/kangaloo/cloudcli/commands/slb"
 	"github.com/kangaloo/cloudcli/config"
 	"github.com/kangaloo/cloudcli/display"
 	"github.com/urfave/cli"
@@ -32,7 +33,7 @@ func main() {
 	// 初始化子命令，当前只用oss子命令
 	commands.AddCmd(app, oss.Oss)
 	//commands.AddCmd(app, ecs.Ecs)
-	//commands.AddCmd(app, slb.Slb)
+	commands.AddCmd(app, slb.Slb)
 	commands.AddCmd(app, interactivemode.Interactive)
 
 	err := app.Run(os.Args)

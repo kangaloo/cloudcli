@@ -22,6 +22,7 @@ func NewOssClient(configInter interface{}) (*oss.Client, error) {
 
 	endpoint = conf.Oss.Endpoint
 
+	// global command flag
 	if len(conf.GlobalFlag.Endpoint) > 0 {
 		endpoint = conf.GlobalFlag.Endpoint
 	}

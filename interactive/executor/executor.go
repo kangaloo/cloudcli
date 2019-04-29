@@ -6,6 +6,7 @@ import (
 	"github.com/kangaloo/cloudcli/interactive/cloud"
 	"github.com/kangaloo/cloudcli/interactive/completion"
 	"github.com/kangaloo/cloudcli/interactive/environment"
+	"gopkg.in/yaml.v2"
 	"os"
 	"os/exec"
 	"strings"
@@ -106,8 +107,12 @@ func internalExecutor(s string) {
 			env.Display()
 		}
 
-		fmt.Printf("%+v\n", cloud.Config)
-		return
+		y, err := yaml.Marshal(cloud.Config)
+		if err != nil {
+			fmt.Println(cloud.Config)
+		}
+
+		fmt.Println(string(y))
 	}
 }
 

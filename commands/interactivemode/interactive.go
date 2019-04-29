@@ -8,6 +8,7 @@ import (
 var Interactive = &cli.Command{
 	Name:      "interactive",
 	ShortName: "inter",
+	Aliases:   []string{"shell"},
 	Usage:     "interactive mode",
 	Action:    interactive.Run,
 }
