@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/kangaloo/cloudcli/commands"
+	"github.com/kangaloo/cloudcli/commands/ecs"
 	"github.com/kangaloo/cloudcli/commands/interactivemode"
 	"github.com/kangaloo/cloudcli/commands/oss"
 	"github.com/kangaloo/cloudcli/commands/slb"
@@ -30,9 +31,9 @@ func main() {
 	// 初始化配置
 	app.Before = config.InitConfig
 
-	// 初始化子命令，当前只用oss子命令
+	// 初始化子命令 目前支持 oss ecs slb
 	commands.AddCmd(app, oss.Oss)
-	//commands.AddCmd(app, ecs.Ecs)
+	commands.AddCmd(app, ecs.Ecs)
 	commands.AddCmd(app, slb.Slb)
 	commands.AddCmd(app, interactivemode.Interactive)
 
