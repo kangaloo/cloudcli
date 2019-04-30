@@ -57,7 +57,7 @@ func extractParameter(confer interface{}) (ak, aks, region, endpoint, temp strin
 }
 
 // 主要负责处理命令行参数
-func List(c *cli.Context) error {
+func ListLB(c *cli.Context) error {
 
 	var (
 		ak, aks, region, endpoint, temp string
@@ -92,8 +92,54 @@ func List(c *cli.Context) error {
 }
 
 // 负责发起请求 格式化输出等
-func list(lb *slb.LoadBalancer) {
+func DescribeLB(c *cli.Context) error {
 
+	necessary := []string{"i"}
+	if err := flagscheck.NecessaryCheck(c, necessary...); err != nil {
+		return err
+	}
+
+	ak, aks, region, endpoint, _, err := extractParameter(c.App.Metadata["config"])
+	if err != nil {
+		return err
+	}
+
+	client, err := slb.NewClientWithAccessKey(region, ak, aks)
+	if err != nil {
+		return err
+	}
+
+	response, err := descLBAttr(c.String("i"), endpoint, client)
+	if err != nil {
+		return err
+	}
+
+	if err := FormatToJson(response); err != nil {
+		return err
+	}
+
+	hresponse, err := descHealthStatus(c.String("i"), endpoint, client)
+	if err != nil {
+		return err
+	}
+
+	return FormatToJson(hresponse)
+}
+
+func descLBAttr(id, endpoint string, client *slb.Client) (*slb.DescribeLoadBalancerAttributeResponse, error) {
+	request := slb.CreateDescribeLoadBalancerAttributeRequest()
+	request.SetDomain(endpoint)
+	request.LoadBalancerId = id
+
+	return client.DescribeLoadBalancerAttribute(request)
+}
+
+func descHealthStatus(id, endpoint string, client *slb.Client) (*slb.DescribeHealthStatusResponse, error) {
+	request := slb.CreateDescribeHealthStatusRequest()
+	request.SetDomain(endpoint)
+	request.LoadBalancerId = id
+
+	return client.DescribeHealthStatus(request)
 }
 
 func handleResp(lbs []slb.LoadBalancer, temp string) error {
@@ -138,6 +184,22 @@ func formatToJson(lb *slb.LoadBalancer) error {
 	}
 
 	fmt.Printf("------------------ %s ----------------\n", lb.LoadBalancerName)
+	fmt.Println(dst)
+	fmt.Println()
+	return nil
+}
+
+func FormatToJson(lb interface{}) error {
+	i, err := json.Marshal(lb)
+	if err != nil {
+		return err
+	}
+
+	dst := bytes.NewBuffer(make([]byte, 0, 1024))
+	if err := json.Indent(dst, i, "", "\t"); err != nil {
+		return err
+	}
+
 	fmt.Println(dst)
 	fmt.Println()
 	return nil
