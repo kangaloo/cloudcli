@@ -44,4 +44,8 @@ var describeSlbFlags = []cli.Flag{
 		Name:  "i",
 		Usage: "describe detail information for slb by `id`",
 	},
+	cli.StringFlag{
+		Name:  "l",
+		Usage: "describe listener Attribute specific listener port",
+	},
 }

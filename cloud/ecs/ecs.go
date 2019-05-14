@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/ecs"
+	"github.com/kangaloo/cloudcli/cloud/slb"
 	"github.com/kangaloo/cloudcli/commands/flagscheck"
 	"github.com/kangaloo/cloudcli/config"
 	"github.com/urfave/cli"
@@ -92,7 +93,6 @@ func extractParameter(confer interface{}) (ak, aks, region, endpoint, temp strin
 }
 
 func ListEcs(c *cli.Context) error {
-
 	ak, aks, region, endpoint, temp, err := extractParameter(c.App.Metadata["config"])
 	if err != nil {
 		return err
@@ -198,4 +198,23 @@ func formatToJson(ecs *ecs.Instance) error {
 	fmt.Println(dst)
 	fmt.Println()
 	return nil
+}
+
+func DescribeEcs(c *cli.Context) error {
+	ak, aks, region, endpoint, _, err := extractParameter(c.App.Metadata["config"])
+	if err != nil {
+		return err
+	}
+
+	client, err := ecs.NewClientWithAccessKey(region, ak, aks)
+	if err != nil {
+		return err
+	}
+
+	request := ecs.CreateDescribeInstanceAttributeRequest()
+	request.SetDomain(endpoint)
+	request.InstanceId = c.String("i")
+	response, err := client.DescribeInstanceAttribute(request)
+
+	return slb.FormatToJson(response)
 }

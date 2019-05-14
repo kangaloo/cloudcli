@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/requests"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/slb"
 	"github.com/kangaloo/cloudcli/commands/flagscheck"
 	"github.com/kangaloo/cloudcli/config"
@@ -123,14 +124,34 @@ func DescribeLB(c *cli.Context) error {
 		return err
 	}
 
-	return FormatToJson(hresponse)
+	if err := FormatToJson(hresponse); err != nil {
+		return err
+	}
+
+	if !c.IsSet("l") {
+		return nil
+	}
+
+	ListenerAttr, err := descListenerAttr(c.String("i"), endpoint, requests.Integer(c.String("l")), client)
+	if err != nil {
+		return err
+	}
+
+	return FormatToJson(ListenerAttr)
+}
+
+func descListenerAttr(id, endpoint string, port requests.Integer, client *slb.Client) (*slb.DescribeLoadBalancerHTTPListenerAttributeResponse, error) {
+	request := slb.CreateDescribeLoadBalancerHTTPListenerAttributeRequest()
+	request.SetDomain(endpoint)
+	request.LoadBalancerId = id
+	request.ListenerPort = port
+	return client.DescribeLoadBalancerHTTPListenerAttribute(request)
 }
 
 func descLBAttr(id, endpoint string, client *slb.Client) (*slb.DescribeLoadBalancerAttributeResponse, error) {
 	request := slb.CreateDescribeLoadBalancerAttributeRequest()
 	request.SetDomain(endpoint)
 	request.LoadBalancerId = id
-
 	return client.DescribeLoadBalancerAttribute(request)
 }
 
@@ -138,19 +159,16 @@ func descHealthStatus(id, endpoint string, client *slb.Client) (*slb.DescribeHea
 	request := slb.CreateDescribeHealthStatusRequest()
 	request.SetDomain(endpoint)
 	request.LoadBalancerId = id
-
 	return client.DescribeHealthStatus(request)
 }
 
 func handleResp(lbs []slb.LoadBalancer, temp string) error {
-
 	if len(temp) == 0 {
 		for _, lb := range lbs {
 			if err := formatToJson(&lb); err != nil {
 				return err
 			}
 		}
-
 		return nil
 	}
 
@@ -168,7 +186,6 @@ func handleResp(lbs []slb.LoadBalancer, temp string) error {
 		}
 		fmt.Println()
 	}
-
 	return nil
 }
 
