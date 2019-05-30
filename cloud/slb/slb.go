@@ -132,20 +132,33 @@ func DescribeLB(c *cli.Context) error {
 		return nil
 	}
 
-	ListenerAttr, err := descListenerAttr(c.String("i"), endpoint, requests.Integer(c.String("l")), client)
+	ListenerAttr, err := descHTTPListenerAttr(c.String("i"), endpoint, requests.Integer(c.String("l")), client)
 	if err != nil {
-		return err
+		ListenerAttr, err := descTCPListenerAttr(c.String("i"), endpoint, requests.Integer(c.String("l")), client)
+		if err != nil {
+			return err
+		}
+
+		return FormatToJson(ListenerAttr)
 	}
 
 	return FormatToJson(ListenerAttr)
 }
 
-func descListenerAttr(id, endpoint string, port requests.Integer, client *slb.Client) (*slb.DescribeLoadBalancerHTTPListenerAttributeResponse, error) {
+func descHTTPListenerAttr(id, endpoint string, port requests.Integer, client *slb.Client) (*slb.DescribeLoadBalancerHTTPListenerAttributeResponse, error) {
 	request := slb.CreateDescribeLoadBalancerHTTPListenerAttributeRequest()
 	request.SetDomain(endpoint)
 	request.LoadBalancerId = id
 	request.ListenerPort = port
 	return client.DescribeLoadBalancerHTTPListenerAttribute(request)
+}
+
+func descTCPListenerAttr(id, endpoint string, port requests.Integer, client *slb.Client) (*slb.DescribeLoadBalancerTCPListenerAttributeResponse, error) {
+	request := slb.CreateDescribeLoadBalancerTCPListenerAttributeRequest()
+	request.SetDomain(endpoint)
+	request.LoadBalancerId = id
+	request.ListenerPort = port
+	return client.DescribeLoadBalancerTCPListenerAttribute(request)
 }
 
 func descLBAttr(id, endpoint string, client *slb.Client) (*slb.DescribeLoadBalancerAttributeResponse, error) {
